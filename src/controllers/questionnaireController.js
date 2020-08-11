@@ -56,7 +56,7 @@ const getPersonalData = async(id) => {
   try {
     conn = await oracledb.getConnection(config);
     const result = await conn.execute(
-      `SELECT IDTERCERO AS "studentId",
+      `SELECT IDTERCERO AS "stsonalrudentId",
         PRIMERNOMBRE || ' ' || PRIMERAPELLIDO || ' ' || SEGUNDOAPELLIDO AS "name",
         CELULAR AS "cellPhone",
         TELEFONO AS "phone",
