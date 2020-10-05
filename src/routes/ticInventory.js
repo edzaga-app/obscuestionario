@@ -19,6 +19,7 @@ const dataprotectionController = require('../controllers/dataProtectionControlle
 router.post('/auth', ticInventoryController.auth);
 router.get('/information', auth, ticInventoryController.get);
 router.post('/information/save', auth, ticInventoryController.save);
+router.post('/information/completedinventory', auth, ticInventoryController.completedinventory);
 
 router.get('/computer', auth, computerController.get);
 router.post('/computer/save', auth, computerController.save);

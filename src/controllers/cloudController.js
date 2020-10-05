@@ -46,7 +46,8 @@ const validateFiels = (thirdpartyId, body) => {
     storageQuantity: body.storageQuantity || null,
     cloudServices: body.cloudServices || null,
     cloudBudget: body.cloudBudget || null,
-    description: body.description || null
+    description: body.description || null,
+    other: body.other || null
   };
 
   if (cloud.hasCloud !== 'S') {
@@ -59,6 +60,7 @@ const validateFiels = (thirdpartyId, body) => {
     cloud.cloudServices = null;
     cloud.cloudBudget = null;
     cloud.description = null;
+    cloud.other = null;
   }
 
   if (cloud.aws) {
@@ -96,6 +98,7 @@ const saveOrUpdate = async (cloud) => {
           :cloudServices,
           :cloudBudget,
           :description,
+          :other,
           :id
         ); END;`,
         {
@@ -110,6 +113,7 @@ const saveOrUpdate = async (cloud) => {
           cloudServices: cloud.cloudServices,
           cloudBudget: cloud.cloudBudget,
           description: cloud.description,
+          other: cloud.other,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
         },
         {
@@ -147,7 +151,8 @@ const getCloud = async (thirdpartyId) => {
         CANTIDADALMACENAMIENTO AS "storageQuantity", 
         SERVICIOSCLOUD AS "cloudServices", 
         PRESUPUESTOCLOUD AS "cloudBudget", 
-        DESCRIPCION AS "description"
+        DESCRIPCION AS "description",
+        OTRA AS "other"
       FROM TB_SUE_CLOUDS
       WHERE IDTERCERO = :IDTERCERO`, [thirdpartyId], { outFormat: oracledb.OUT_FORMAT_OBJECT}
     );

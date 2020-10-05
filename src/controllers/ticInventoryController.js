@@ -36,7 +36,8 @@ controller.auth = async(req, res) => {
   
   res.json({
     auth: true,
-    token
+    token,
+    completedInventory: user.completedInventory
   })
 }
 
@@ -48,6 +49,22 @@ controller.save = async(req, res) => {
     return res.status(500).json({
       auth: false,
       message: 'Error al guardar la información, comuniquese con el administrador'
+    });
+  }
+  res.json({
+    auth: true,
+    data: thirdpartyId
+  });
+}
+
+controller.completedinventory = async(req, res) => {
+  const thirdpartyId = req.user.thirdpartyId;
+  const { completedInventory } = req.body;
+  const isCompleted = await completedinventory(thirdpartyId, completedInventory);
+  if (isCompleted === 0) {
+    return res.status(500).json({
+      auth: false,
+      message: 'Error al finalizar el inventario, comuniquese con el administrador'
     });
   }
   res.json({
@@ -93,6 +110,38 @@ const save = async (thirdpartyId, email, university) => {
   return res;
 }
 
+const completedinventory = async (thirdpartyId, completedInventory) => {
+  let res = 0;
+  let conn;
+  try {
+    conn = await oracledb.getConnection(config);
+    const result = await conn.execute(
+      `BEGIN 
+        PKG_REPORTES.SP_FINALIZARINVENTARIO(:thirdpartyId, :completedInventory);
+       END;`,
+       {
+         thirdpartyId: thirdpartyId,
+         completedInventory: completedInventory
+       },
+       {
+         autoCommit: false
+       }
+    );
+    res = thirdpartyId;
+    await conn.commit();
+    
+  } catch (err) {
+    console.error(err);
+    await conn.rollback();
+  } finally {
+    if (conn) {
+      await conn.close();
+    }
+  }
+  return res;
+}
+
+
  /**
   * Retorna los datos almacenados en la tabla 
   * de cada tercero
@@ -107,7 +156,8 @@ const getInformation = async (userId) => {
       `SELECT IDTERCERO AS "thirdpartyId",
         UNIVERSIDAD AS "university",
         NOMBRE AS "name",
-        EMAIL AS "email"  
+        EMAIL AS "email",
+        FINALIZOINVENTARIO AS "completedInventory"  
        FROM TB_SUE_TERCEROS
        WHERE EMAIL LIKE '%${userId}%'`, [], { outFormat: oracledb.OUT_FORMAT_OBJECT}
     );
@@ -138,7 +188,8 @@ const authUser = async (user, pass) => {
       `SELECT IDUSUARIO AS "userId",
         IDTERCERO AS "thirdpartyId",
         USUARIOEMAIL AS "user",
-        CLAVE AS "password"
+        CLAVE AS "password",
+        FINALIZOINVENTARIO AS "completedInventory"
        FROM TB_SUE_USUARIOS USU
        JOIN TB_SUE_TERCEROS TST ON TST.EMAIL = USU.USUARIOEMAIL
        WHERE USUARIOEMAIL = :USUARIOEMAIL
