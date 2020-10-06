@@ -6,7 +6,7 @@ WORKDIR /home/edwar.zapata/projects/environment/production
 
 # Librerías para que oracle se ejecute con nodejs
 RUN wget https://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-basiclite-19.6.0.0.0-1.x86_64.rpm
-RUN rpm -i oracle-instantclient19.6-basiclite-19.6.0.0.0-1.x86_64.rpm
+RUN yum install oracle-instantclient19.6-basiclite-19.6.0.0.0-1.x86_64.rpm
 
 # Copio el archivo package.json para despues instalar las dependencias de mi repositorio
 COPY package*.json ./
