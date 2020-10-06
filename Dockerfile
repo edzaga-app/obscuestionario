@@ -4,6 +4,9 @@ FROM node:14.6.0-alpine
 # Defino el directorio en donde se va a ejecutar mi configuración dentro del contenedor
 WORKDIR /home/edwar.zapata/projects/environment/production
 
+RUN yum install -y libaio
+RUN yum install -y http://yum.oracle.com/repo/OracleLinux/OL7/oracle/instantclient/x86_64/getPackage/oracle-instantclient19.6-basiclite-19.6.0.0.0-1.x86_64.rpm
+
 # Copio el archivo package.json para despues instalar las dependencias de mi repositorio
 COPY package*.json ./
 
