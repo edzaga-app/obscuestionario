@@ -1,20 +1,8 @@
 # Se define la version de node que tiene el contenedor
-FROM oraclelinux:7-slim
+FROM node:14.6.0-alpine
 
 # Defino el directorio en donde se va a ejecutar mi configuración dentro del contenedor
 WORKDIR /home/edwar.zapata/projects/environment/production
-
-# Librerías para que oracle se ejecute con nodejs
-RUN yum update -y && \
-  yum install -y oracle-release-el7 && \
-  yum install -y oracle-nodejs-release-el7 && \
-  yum install -y --disablerepo=ol7_developer_EPEL nodejs && \
-  yum install -y oracle-instantclient19.3-basic.x86_64 && \
-  yum clean all && \
-  node --version && \
-  npm --version && \
-  npm install oracledb && \
-  echo Installed
 
 # Copio el archivo package.json para despues instalar las dependencias de mi repositorio
 COPY package*.json ./
