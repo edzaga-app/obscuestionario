@@ -9,7 +9,7 @@ controller.get = async (req, res) => {
   const thirdpartyId = req.user.thirdpartyId;
   const computersAvailability = await getComputersAvailability(thirdpartyId);
   res.json({
-    auth: true,
+    auth: computersAvailability ? true : false,
     data: computersAvailability
   });
 } 

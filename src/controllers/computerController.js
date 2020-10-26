@@ -9,7 +9,7 @@ controller.get = async (req, res) => {
     const thirdpartyId = req.user.thirdpartyId;
     const computer = await getComputer(thirdpartyId);
     res.json({
-      auth: true,
+      auth: computer ? true: false,
       data: computer
     });
  } 

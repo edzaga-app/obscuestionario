@@ -15,6 +15,7 @@ const informationSystemController = require('../controllers/informationSystemCon
 const domesticNetworkController = require('../controllers/domesticNetworkController');
 const campuslicensingController = require('../controllers/campusLicensingController');
 const dataprotectionController = require('../controllers/dataProtectionController');
+const emergencyBudgetController = require('../controllers/emergencyBudgetController');
 
 router.post('/auth', ticInventoryController.auth);
 router.get('/information', auth, ticInventoryController.get);
@@ -59,6 +60,9 @@ router.post('/campuslicensing/save', auth, campuslicensingController.save);
 
 router.get('/dataprotection', auth, dataprotectionController.get);
 router.post('/dataprotection/save', auth, dataprotectionController.save);
+
+router.get('/emergencybudget', auth, emergencyBudgetController.get);
+router.post('/emergencybudget/save', auth, emergencyBudgetController.save);
 
 module.exports = router;
 
