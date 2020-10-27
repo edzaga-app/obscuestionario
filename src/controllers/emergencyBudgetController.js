@@ -38,17 +38,12 @@ const validateFiels = (thirdpartyId, body) => {
     id: null,
     thirdpartyId: thirdpartyId,
     studentConnectivity: body.studentConnectivity || null,
-    obsStudentConnectivity: body.obsStudentConnectivity || null,
     teacherConnectivity: body.teacherConnectivity || null,
-    obsTeacherConnectivity: body.obsTeacherConnectivity || null,
     administrativeConnectivity: body.administrativeConnectivity || null,
-    obsAdministrativeConnectivity: body.obsAdministrativeConnectivity || null,
     studentComputer: body.studentComputer || null,
-    obsStudentComputer: body.obsStudentComputer || null,
     teacherComputer: body.teacherComputer || null,
-    obsTeacherComputer: body.obsTeacherComputer || null,
     administrativeComputer: body.administrativeComputer || null,
-    obsAdministrativeComputer: body.obsAdministrativeComputer || null
+    description: body.description || null
   };
   return emergencyBudget;
 }
@@ -64,33 +59,23 @@ const saveOrUpdate = async (emergencyBudget) => {
         (
           :thirdpartyId,
           :studentConnectivity,
-          :obsStudentConnectivity,
           :teacherConnectivity,
-          :obsTeacherConnectivity,
           :administrativeConnectivity,
-          :obsAdministrativeConnectivity,
           :studentComputer,
-          :obsStudentComputer,
           :teacherComputer,
-          :obsTeacherComputer,
           :administrativeComputer,
-          :obsAdministrativeComputer,
+          :description,
           :id
         ); END;`,
         {
           thirdpartyId: emergencyBudget.thirdpartyId,
           studentConnectivity: emergencyBudget.studentConnectivity,
-          obsStudentConnectivity: emergencyBudget.obsStudentConnectivity,
           teacherConnectivity: emergencyBudget.teacherConnectivity,
-          obsTeacherConnectivity: emergencyBudget.obsTeacherConnectivity,
           administrativeConnectivity: emergencyBudget.administrativeConnectivity,
-          obsAdministrativeConnectivity: emergencyBudget.obsAdministrativeConnectivity,
           studentComputer: emergencyBudget.studentComputer,
-          obsStudentComputer: emergencyBudget.obsStudentComputer,
           teacherComputer: emergencyBudget.teacherComputer,
-          obsTeacherComputer: emergencyBudget.obsTeacherComputer,
           administrativeComputer: emergencyBudget.administrativeComputer,
-          obsAdministrativeComputer: emergencyBudget.obsAdministrativeComputer,
+          description: emergencyBudget.description,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
         },
         {
@@ -117,20 +102,15 @@ const getEmergencyBudget = async (thirdpartyId) => {
   try {
     conn = await oracledb.getConnection(config);
     const result = await conn.execute(
-      `SELECT IDPRESUPUESTOEMERGENCIA AS "id", 
-        IDTERCERO AS "thirdpartyId", 
-        CONECTIVIDADESTUDIANTE AS "studentConnectivity",   
-        OBSCONECTIVIDADESTUDIANTE AS "obsStudentConnectivity", 
-        CONECTIVIDADDOCENTE AS "teacherConnectivity", 
-        OBSCONECTIVIDADDOCENTE AS "obsTeacherConnectivity", 
-        CONECTIVIDADADMINISTRATIVO AS "administrativeConnectivity", 
-        OBSCONECTIVIDADADMINISTRATIVO AS "obsAdministrativeConnectivity", 
-        EQUIPOESTUDIANTE AS "studentComputer", 
-        OBSEQUIPOESTUDIANTE AS "obsStudentComputer", 
-        EQUIPODOCENTE AS "teacherComputer", 
-        OBSEQUIPODOCENTE AS "obsTeacherComputer", 
-        EQUIPOADMINISTRATIVO AS "administrativeComputer", 
-        OBSEQUIPOADMINISTRATIVO AS "obsAdministrativeComputer"
+      `SELECT IDPRESUPUESTOEMERGENCIA AS "id",
+        IDTERCERO AS "thirdpartyId",
+        CONECTIVIDADESTUDIANTE AS "studentConnectivity",
+        CONECTIVIDADDOCENTE AS "teacherConnectivity",
+        CONECTIVIDADADMINISTRATIVO AS "administrativeConnectivity",
+        EQUIPOESTUDIANTE AS "studentComputer",
+        EQUIPODOCENTE AS "teacherComputer",
+        EQUIPOADMINISTRATIVO AS "administrativeComputer",
+        DESCRIPCION AS "description"
       FROM TB_SUE_PRESUPUESTOEMERGENCIAS
       WHERE IDTERCERO = :IDTERCERO`, [thirdpartyId], { outFormat: oracledb.OUT_FORMAT_OBJECT}
     );
